@@ -1,3 +1,4 @@
+import re
 from textnode import (
     TextNode,
     text_type_text,
@@ -26,3 +27,34 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
                 split_nodes.append(TextNode(sections[i], text_type))
         new_nodes.extend(split_nodes)
     return new_nodes
+
+def extract_markdown_images(text):
+    pattern = r"!\[(.*?)\]\((.*?)\)"
+    matches = re.findall(pattern, text)
+    return matches
+
+
+def extract_markdown_links(text):
+    pattern = r"(?<!!)\[(.*?)\]\((.*?)\)"
+    matches = re.findall(pattern, text)
+    return matches
+
+nodeTest = TextNode(
+    "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)",
+    text_type_text,
+)
+
+def split_nodes_images(old_nodes):
+    new_nodes =[]
+    for node in old_nodes:
+        extracted = extract_markdown_images(node.text)
+        if len(extracted) < 2:
+            new_nodes.append(node)
+        for extract in extracted:
+            print("extracts:\n")
+            print(extract)
+            print("\n")
+        new_nodes.append(node)
+    return new_nodes
+imageText = split_nodes_images([nodeTest])
+print(imageText)
