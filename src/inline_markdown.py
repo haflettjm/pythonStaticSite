@@ -39,22 +39,30 @@ def extract_markdown_links(text):
     matches = re.findall(pattern, text)
     return matches
 
-nodeTest = TextNode(
-    "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)",
-    text_type_text,
-)
 
-def split_nodes_images(old_nodes):
+def split_nodes_image(old_nodes):
     new_nodes =[]
     for node in old_nodes:
+        ## check to see if empty if empty don't append skip
+        if len(node.text) < 1:
+            continue
+        ## now we grab all matches
         extracted = extract_markdown_images(node.text)
+        ## if there are no matches just append
+        if len(extracted) < 2:
+            new_nodes.append(node)
+        new_nodes.append(node)
+    return new_nodes
+
+def extract_nodes_link(old_nodes):
+    new_nodes = []
+    for node in old_nodes:
+        extracted = extract_nodes_link(node.text)
         if len(extracted) < 2:
             new_nodes.append(node)
         for extract in extracted:
-            print("extracts:\n")
+            print("extracts: \n")
             print(extract)
             print("\n")
         new_nodes.append(node)
     return new_nodes
-imageText = split_nodes_images([nodeTest])
-print(imageText)
