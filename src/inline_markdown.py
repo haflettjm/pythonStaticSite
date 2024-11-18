@@ -41,28 +41,22 @@ def extract_markdown_links(text):
 
 
 def split_nodes_image(old_nodes):
-    new_nodes =[]
-    for node in old_nodes:
-        ## check to see if empty if empty don't append skip
-        if len(node.text) < 1:
-            continue
-        ## now we grab all matches
-        extracted = extract_markdown_images(node.text)
-        ## if there are no matches just append
-        if len(extracted) < 2:
-            new_nodes.append(node)
-        new_nodes.append(node)
     return new_nodes
 
 def extract_nodes_link(old_nodes):
-    new_nodes = []
+    new_nodes =[]
     for node in old_nodes:
-        extracted = extract_nodes_link(node.text)
-        if len(extracted) < 2:
+        if node.text_type != text_type_text:
             new_nodes.append(node)
-        for extract in extracted:
-            print("extracts: \n")
-            print(extract)
-            print("\n")
+            continue
+        ## check to see if empty if empty don't append skip
+        ## now we grab all matches
+        extracted_links = extract_markdown_links(node.text)
+
+        ## if there are no matches just append
+        if len(extracted.links) < 2:
+            new_nodes.append(node)
+        sections = node.text.split(f"![{image_alt}]({image_link})",1)
         new_nodes.append(node)
+        print(new_nodes)
     return new_nodes
